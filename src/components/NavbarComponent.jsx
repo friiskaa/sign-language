@@ -25,7 +25,7 @@ const NavbarComponent = () => {
       <Container>
         <Navbar.Brand href="#home">
           <img 
-            src="/images/sila-logo-1.svg" 
+            src="/images/logo-sila.png" 
             width="120"
             className='d-inline-block align-top'
             alt="SiLa Logo" 

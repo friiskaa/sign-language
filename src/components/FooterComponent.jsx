@@ -8,7 +8,7 @@ function FooterComponent() {
       <Container>
         <Row className='d-flex justify-content-between'>
           <Col className='col-lg-3'>
-            <img src="/images/sila-logo-1.svg" width="120" className='d-inline-block align-top' alt="SiLa Logo" />
+            <img src="/images/logo-sila.png" width="120" className='d-inline-block align-top' alt="SiLa Logo" />
             <p className='desc'>Bridging communication gaps with elegant sign language translation technology.</p>
           </Col>
           <Col className='d-flex flex-column col-lg-3'>
