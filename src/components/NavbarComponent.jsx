@@ -16,12 +16,13 @@ const NavbarComponent = () => {
 
   useEffect(() => {
     changeBackgroundColor();
-
     window.addEventListener('scroll', changeBackgroundColor);
-  })
+
+    return () => window.removeEventListener('scroll', changeBackgroundColor);
+  }, []);
 
   return (
-    <Navbar expand="lg" className={changeColor ? "color-active" : ""}>
+    <Navbar expand="lg" className={`navbar ${changeColor ? "color-active" : ""}`}>
       <Container>
         <Navbar.Brand href="#home">
           <img 
@@ -45,9 +46,9 @@ const NavbarComponent = () => {
             })}
           </Nav>
 
-          <div className='text-center'>
+          {/* <div className='text-center'>
             <button className='btn btn-outline-primary rounded-5'>Get Started</button>
-          </div>
+          </div> */}
         </Navbar.Collapse>
       </Container>
     </Navbar>

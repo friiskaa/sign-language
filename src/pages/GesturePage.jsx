@@ -1,54 +1,100 @@
-import React, { useRef, useEffect } from 'react';
-import { Container, Card, Button, Row, Col } from 'react-bootstrap';
-import { FaCamera } from 'react-icons/fa';
+import React, { useRef, useEffect, useState } from 'react';
+import { FaCamera, FaStopCircle, FaTrashAlt, FaEraser } from 'react-icons/fa';
+import '../assets/css/main.css';
 
 function GesturePage() {
+  const [isRecording, setIsRecording] = useState(false);
+  const [translation, setTranslation] = useState('');
   const videoRef = useRef(null);
 
   useEffect(() => {
-    const startCamera = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        videoRef.current.srcObject = stream;
-      } catch (error) {
-        console.error('The camera is inaccessible:', error);
+    if (isRecording) {
+      navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      }).catch(error => {
+        console.error('Error accessing webcame:', error);
+        setIsRecording(false);
+      });
+    } else {
+      const stream = videoRef.current?.srcObject;
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
       }
-    };
+    }
+  }, [isRecording]);
 
-    startCamera();
-  }, []);
+  const handleClearAll = () => {
+  setTranslation('');
+  };
+
+  // const handleClearLast = () => {
+  //   const newValue = translation.trim().split(' ');
+  //   newValue.pop();
+  //   setTranslation(newValue.join(' '));
+  // };
+
 
   return (
-    <div className='gesture-page min-vh-100'>
-      <Container>
-        <h3 className='fw-bold'>Gesture Translation</h3>
-        <Row className="justify-content-center">
-          <Col md={6}>
-            <Card className="shadow-lg">
-              <Card.Body>
-                <video ref={videoRef} autoPlay playsInline className="w-100 rounded" />
-                <div className="mt-3 d-flex justify-content-center">
-                  <Button variant="primary" className='rounded-pill'>
-                    <FaCamera className='me-2'/>
-                    Start Translation
-                  </Button>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
+    <div className="gesture-page min-vh-100">
+      <div className="left-panel">
+        <div className="main-content">
+          <div className="camera-panel">
+            {!isRecording ? (
+              <>
+                <FaCamera className="camera-icon" />
+                <span className='translating-label'></span>
+              </>
+            ) : null}
+            <video
+              ref={videoRef}
+              autoPlay
+              muted
+              playsInline
+              className={`video ${!isRecording ? 'hidden' : ''}`}
+            />
+          </div>
 
-          <Col md={6}>
-            <Card className="shadow-lg">
-              <Card.Body>
-                <Card.Title className="fw-semibold mb-3">Translation Result</Card.Title>
-                <p className="text-muted">Hasil akan muncul di sini setelah pendeteksian gesture.</p>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+          <div className="record-button">
+            <button
+              onClick={() => {
+                setIsRecording(!isRecording);
+                setTranslation('');
+              }}
+              className={isRecording ? 'stop' : 'start'}
+            >
+              {isRecording ? <FaStopCircle /> : <FaCamera />}
+              {isRecording ? ' Stop Recording' : ' Start Recording'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="translation-panel">
+        <div className='translation-header'>
+          <h2 className='title'>Translation Result</h2>
+          <div className="translation-actions">
+            <button onClick={handleClearAll} title="Clear All">
+              <FaTrashAlt />
+            </button>
+            {/* <button onClick={handleClearLast} title="Clear Last">
+              <FaEraser />
+            </button> */}
+          </div>
+        </div>
+        
+        <div className="translation-box">
+          {translation ? translation : (
+            <>
+            <p>Start recording to see translation results</p>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
-};
+}
 
 export default GesturePage;

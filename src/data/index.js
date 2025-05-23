@@ -24,11 +24,6 @@ export const navLinks = [
     },
     {
         id: 4,
-        path: "guide",
-        text: "Guide",
-    },
-    {
-        id: 5,
         path: "about",
         text: "About",
     },
